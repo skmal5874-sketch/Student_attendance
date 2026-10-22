@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الحضور | نظام حضور الطلاب</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#263238}header{background:#123b63;color:white;text-align:center;padding:22px 12px}header h1{margin:0 0 5px;font-size:24px}main{width:92%;max-width:720px;margin:28px auto}.card{background:#fff;border-radius:14px;padding:24px;box-shadow:0 5px 18px #00000012}h2{color:#123b63;margin-top:0}label{display:block;margin:13px 0 6px;font-weight:bold}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px}textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}button,.link{display:inline-block;border:0;border-radius:8px;padding:12px 18px;background:#176b45;color:white;text-decoration:none;font-size:15px;cursor:pointer;margin-top:18px}button:hover,.link:hover{background:#105236}.secondary{background:#123b63}.status{padding:12px;background:#eef6f0;border-radius:8px;color:#176b45;margin-top:15px;display:none}@media(max-width:560px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>نظام إدارة حضور الطلاب</h1><div>كلية الإمارات للعلوم والتكنولوجيا</div></header>
+<main><section class="card">
+<h2>تسجيل حضور طالب</h2>
+<form id="attendanceForm">
+<label for="studentName">اسم الطالب</label><input id="studentName" required placeholder="اكتب اسم الطالب">
+<div class="row">
+<div><label for="studentId">الرقم الجامعي</label><input id="studentId" required placeholder="الرقم الجامعي"></div>
+<div><label for="department">القسم</label><input id="department" required placeholder="اسم القسم"></div>
+</div>
+<div class="row">
+<div><label for="date">التاريخ</label><input id="date" type="date" required></div>
+<div><label for="status">حالة الحضور</label><select id="status" required><option value="حاضر">حاضر</option><option value="غائب">غائب</option><option value="متأخر">متأخر</option></select></div>
+</div>
+<label for="notes">ملاحظات</label><textarea id="notes" placeholder="ملاحظات اختيارية"></textarea>
+<button type="submit">تسجيل الحضور</button>
+<a class="link secondary" href="index.html">تسجيل الخروج</a>
+<div id="message" class="status" role="status"></div>
+</form>
+</section></main>
+<script>
+document.getElementById('date').value = new Date().toISOString().slice(0,10);
+document.getElementById('attendanceForm').addEventListener('submit', function(e){
+ e.preventDefault();
+ const record = {
+  studentName: document.getElementById('studentName').value.trim(),
+  studentId: document.getElementById('studentId').value.trim(),
+  department: document.getElementById('department').value.trim(),
+  date: document.getElementById('date').value,
+  status: document.getElementById('status').value,
+  notes: document.getElementById('notes').value.trim()
+ };
+ const records = JSON.parse(localStorage.getItem('attendanceRecords') || '[]');
+ records.push(record);
+ localStorage.setItem('attendanceRecords', JSON.stringify(records));
+ const message = document.getElementById('message');
+ message.style.display = 'block';
+ message.textContent = 'تم تسجيل الحضور في هذا المتصفح. عدد السجلات المحفوظة: ' + records.length;
+ this.reset();
+ document.getElementById('date').value = new Date().toISOString().slice(0,10);
+});
+</script>
+</body>
+</html>
